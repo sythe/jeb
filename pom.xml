@@ -5,9 +5,13 @@
 		 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sythesystems</groupId>
+    <groupId>com.sythesystems.jeb</groupId>
     <artifactId>jeb</artifactId>
     <version>0.1.0</version>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A tiny, simple framework for easily mapping JPA entities into JSON responses in Spring Rest Controllers</description>
+    <url>https://github.com/sythe/jeb</url>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -30,4 +34,22 @@
   
     </dependencies>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Matt Forsythe</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/sythe/jeb.git</connection>
+        <developerConnection>scm:git:ssh://github.com/sythe/jeb.git</developerConnection>
+        <url>https://github.com/sythe/jeb</url>
+    </scm>
 </project>
