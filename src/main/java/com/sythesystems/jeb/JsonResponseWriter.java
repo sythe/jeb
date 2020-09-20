@@ -60,7 +60,7 @@ public class JsonResponseWriter {
         jsonGen.writeStartObject();
 
         for(PropertyDescriptor desc: wrapper.getPropertyDescriptors()) {
-            if (! desc.getReadMethod().getDeclaringClass().equals(Object.class)) {
+            if (desc.getReadMethod() != null && ! desc.getReadMethod().getDeclaringClass().equals(Object.class)) {
                 String name = desc.getName();
                 Object value = wrapper.getPropertyValue(name);
                 String newPath = path + "/" + name;

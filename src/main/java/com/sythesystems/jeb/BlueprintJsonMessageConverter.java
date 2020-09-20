@@ -43,7 +43,7 @@ public class BlueprintJsonMessageConverter implements HttpMessageConverter<Bluep
     @Override
     public BlueprintJsonResponse read(Class<? extends BlueprintJsonResponse> clazz, HttpInputMessage input) throws IOException, HttpMessageNotReadableException {
         // canRead() always returns false, so we should never get here
-        return null;
+        throw new HttpMessageNotReadableException("This HttpMessageConverter is not intended to read requests", input);
     }
 
     @Override
