@@ -7,7 +7,7 @@
 
     <groupId>com.sythesystems.jeb</groupId>
     <artifactId>jeb</artifactId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A tiny, simple framework for easily mapping JPA entities into JSON responses in Spring Rest Controllers</description>
