@@ -5,11 +5,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -37,6 +43,30 @@ public class JsonResponseWriter {
             jsonGen.writeNumber((BigDecimal) value);
         } else if(String.class.isInstance(value)) {
             jsonGen.writeString((String) value);
+        } else if(Enum.class.isInstance(value)) {
+            jsonGen.writeString(value.toString());
+        } else if(Map.class.isInstance(value)) {
+            Map<?,?> map = (Map<?,?>) value;
+            jsonGen.writeStartObject();
+            for(Object key: map.keySet()) {
+                jsonGen.writeFieldName(key.toString());
+                writeValue(map.get(key), jsonGen, blueprint, path);
+            }
+            jsonGen.writeEndObject();
+        } else if (Page.class.isInstance(value)) {
+            Page<?> page = (Page<?>) value;
+            jsonGen.writeStartObject();
+            jsonGen.writeFieldName("number");
+            jsonGen.writeNumber(page.getNumber());
+            jsonGen.writeFieldName("size");
+            jsonGen.writeNumber(page.getSize());
+            jsonGen.writeFieldName("totalPages");
+            jsonGen.writeNumber(page.getTotalPages());
+            jsonGen.writeFieldName("totalElements");
+            jsonGen.writeNumber(page.getTotalElements());
+            jsonGen.writeFieldName("content");
+            writeValue(page.getContent(), jsonGen, blueprint, path);
+            jsonGen.writeEndObject();
         } else if(Iterable.class.isInstance(value)) {
             jsonGen.writeStartArray();
             for(Object obj: (Iterable<?>) value) {
@@ -47,10 +77,13 @@ public class JsonResponseWriter {
             throw new RuntimeException("Arrays are not yet supported");
         } else if(Date.class.isInstance(value)) {
         } else if(Calendar.class.isInstance(value)) {
-        } else if(LocalDate.class.isInstance(value) || 
-                  LocalDateTime.class.isInstance(value))
+        } else if(LocalDate.class.isInstance(value)) {
+            jsonGen.writeString(DateTimeFormatter.ISO_DATE.format((TemporalAccessor) value));
+        } else if(LocalDateTime.class.isInstance(value) ||
+                  OffsetDateTime.class.isInstance(value) ||
+                  ZonedDateTime.class.isInstance(value))
         {
-            jsonGen.writeString(value.toString());
+            jsonGen.writeString(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format((TemporalAccessor) value));
         } else {
             writeObject(new BeanWrapperImpl(value), jsonGen, blueprint, path);
         }
@@ -89,6 +122,9 @@ public class JsonResponseWriter {
                 Date.class.isInstance(value)||
                 Calendar.class.isInstance(value)||
                 LocalDate.class.isInstance(value) ||
-                LocalDateTime.class.isInstance(value));
+                LocalDateTime.class.isInstance(value)) ||
+                OffsetDateTime.class.isInstance(value) ||
+                ZonedDateTime.class.isInstance(value) ||
+                Enum.class.isInstance(value);
     }
 }
