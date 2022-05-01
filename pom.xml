@@ -109,7 +109,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/sythe/jeb.git</connection>
-        <developerConnection>scm:git:ssh://github.com/sythe/jeb.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:sythe/jeb.git</developerConnection>
         <url>https://github.com/sythe/jeb</url>
     </scm>
     
