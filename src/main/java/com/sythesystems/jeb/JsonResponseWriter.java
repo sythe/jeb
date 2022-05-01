@@ -95,9 +95,10 @@ public class JsonResponseWriter {
         for(PropertyDescriptor desc: wrapper.getPropertyDescriptors()) {
             if (desc.getReadMethod() != null && ! desc.getReadMethod().getDeclaringClass().equals(Object.class)) {
                 String name = desc.getName();
-                Object value = wrapper.getPropertyValue(name);
                 String newPath = path + "/" + name;
-                if(isJsonPrimitive(value) || blueprint.shouldWrite(newPath)) {
+                Class<?> valueClass = wrapper.getPropertyType(name);
+                if(isJsonPrimitive(valueClass) || blueprint.shouldWrite(newPath)) {
+                    Object value = wrapper.getPropertyValue(name);
                     jsonGen.writeFieldName(name);
                     writeValue(value, jsonGen, blueprint, newPath);
                 }
@@ -110,21 +111,21 @@ public class JsonResponseWriter {
     /*
      * Anything that can be represented in JSON that is not an array or an object.
      */
-    private boolean isJsonPrimitive (Object value) {
-        return (value == null ||
-                Boolean.class.isInstance(value) ||
-                Integer.class.isInstance(value)||
-                Long.class.isInstance(value)||
-                Float.class.isInstance(value)||
-                Double.class.isInstance(value)||
-                BigDecimal.class.isInstance(value)||
-                String.class.isInstance(value)||
-                Date.class.isInstance(value)||
-                Calendar.class.isInstance(value)||
-                LocalDate.class.isInstance(value) ||
-                LocalDateTime.class.isInstance(value)) ||
-                OffsetDateTime.class.isInstance(value) ||
-                ZonedDateTime.class.isInstance(value) ||
-                Enum.class.isInstance(value);
+    private boolean isJsonPrimitive (Class<?> value) {
+        return (value.isPrimitive() ||
+                Boolean.class.isAssignableFrom(value) ||
+                Integer.class.isAssignableFrom(value)||
+                Long.class.isAssignableFrom(value)||
+                Float.class.isAssignableFrom(value)||
+                Double.class.isAssignableFrom(value)||
+                BigDecimal.class.isAssignableFrom(value)||
+                String.class.isAssignableFrom(value)||
+                Date.class.isAssignableFrom(value)||
+                Calendar.class.isAssignableFrom(value)||
+                LocalDate.class.isAssignableFrom(value) ||
+                LocalDateTime.class.isAssignableFrom(value)) ||
+                OffsetDateTime.class.isAssignableFrom(value) ||
+                ZonedDateTime.class.isAssignableFrom(value) ||
+                Enum.class.isAssignableFrom(value);
     }
 }
